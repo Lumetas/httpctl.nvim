@@ -1,0 +1,72 @@
+@user={{$USER}}   #  '$' mean: environment variable and save the value in the variable: 'user'
+@my-token = abc-42
+
+### #give a star for this great project ;-)
+PUT https://api.github.com/user/starred/lima1909/resty.nvim
+Authorization: Bearer {{my-token}}
+Accept: application/vnd.github+json
+
+### #Users ID=2
+GET https://reqres.in/api/users/2
+  
+# @lang lua
+> {%
+  local json = ctx.json_body()
+  ctx.set("id", json.data.id)
+%}
+
+### #GET to jsonplaceholder 
+GET https://jsonplaceholder.typicode.com/comments
+# headers
+accept: application/json  
+
+# query values
+postId = 1
+id= {{id}}
+
+###  #httpbin
+
+# variable for the hostname
+@hostname = httpbin.org
+
+GET https://{{hostname}}/get
+
+accept: application/json  
+
+# -------------------------------------------------------
+### #getobj
+GET https://api.restful-api.dev/objects
+
+
+### #POST objects
+POST https://api.restful-api.dev/objects
+accept: application/json  
+Content-type: application/json ; charset=UTF-8
+
+{
+   "name": "MY Apple MacBook Pro 16",
+   "data": {
+      "year": 2019,
+      "price": 1849.99,
+      "CPU model": "Intel Core i9",
+      "Hard disk size": "1 TB"
+   }
+}
+
+# -------------------------------------------------------
+###  GET all posts
+GET https://jsonplaceholder.typicode.com/posts/10
+
+# userId=99
+# id = 101
+
+### POST create a new post
+POST https://jsonplaceholder.typicode.com/posts
+accept: application/json  
+Content-type: application/json; charset=UTF-8
+
+{
+    "title": "foo",
+    "body": "bar",
+    "userId": 99
+}
