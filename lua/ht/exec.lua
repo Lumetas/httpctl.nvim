@@ -82,14 +82,42 @@ M.jq_wait = function(timeout, json, callback, jq_filter)
 end
 
 -- --------- CURL -------------------
-
+M._create_curl_job = function(request, callback, error_callback, bufnr)
+    local job
+    
+    -- Выполняем pre-script если есть
+    if request.pre_script then
+        request = M.run_pre_script(request.pre_script, request)
+    end
+    
+    request.callback = function(result)
+        job.is_finished = true
+        
+        if request.script then
+            result.global_variables = M.script(request.script, result, bufnr)
+        else
+            result.global_variables = {}
+        end
+        
+        callback(result)
+    end
+    request.on_error = function(result)
+        job.is_finished = true
+        error_callback(result)
+    end
+    
+    job = curl.request(request.url, request)
+    job.is_finished = false
+    
+    return job
+end
 ---  Create an async job for the curl commend.
 ---
 ---@param request table  the request definition
 ---@param callback function callback function where to get the result
 ---@param error function callback function to get the error result if it occurred
-M.curl = function(request, callback, error)
-	return M._create_curl_job(request, callback, error)
+M.curl = function(request, callback, error, bufnr)
+	return M._create_curl_job(request, callback, error, bufnr)
 end
 
 ---  Create an sync job for the curl commend.
@@ -261,46 +289,49 @@ function M.run_pre_script(code, request)
 end
 
 
--- Обновим функцию _create_curl_job чтобы выполнять pre-script перед запросом
-M._create_curl_job = function(request, callback, error_callback)
-    local job
-    
-    -- Выполняем pre-script если есть
-    if request.pre_script then
-        request = M.run_pre_script(request.pre_script, request)
-    end
-    
-    request.callback = function(result)
-        job.is_finished = true
-        
-        if request.script then
-            result.global_variables = M.script(request.script, result)
-        else
-            result.global_variables = {}
-        end
-        
-        callback(result)
-    end
-    request.on_error = function(result)
-        job.is_finished = true
-        error_callback(result)
-    end
-    
-    job = curl.request(request.url, request)
-    job.is_finished = false
-    
-    return job
-end
-
 -- Также обновим функцию script для post-scripts чтобы было понятнее:
-function M.script(code, result)
+function M.script(code, result, bufnr)
     if not code or vim.trim(code):len() == 0 then
         return {}
     end
     
     M.global_variables = _globals.get_global_variables()
-    
+    local output_queue = {}
+	local is_scheduled = false
+
+	local function flush_queue()
+		if #output_queue == 0 then return end
+		
+		local operations = output_queue
+		output_queue = {}
+		is_scheduled = false
+		
+		vim.schedule(function()
+			for _, op in ipairs(operations) do
+				if op.type == 'write' then
+					vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {})
+					if op.text then
+						vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, { op.text })
+					end
+				elseif op.type == 'append' then
+					local lines = vim.split(op.text or '', '\n')
+					vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, lines)
+				elseif op.type == 'clear' then
+					vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {})
+				end
+			end
+		end)
+	end
+
+	local function schedule_flush()
+		if not is_scheduled then
+			is_scheduled = true
+			vim.defer_fn(flush_queue, 100)
+		end
+	end
+
     local ctx = {
+		bufnr = bufnr,
         -- body = '{}', status = 200, headers = {}, exit = 0, global_variables = {}
         result = result,
         response = result,
@@ -324,6 +355,32 @@ function M.script(code, result)
             local r = M.cmd(c)
             return string.gsub(r, "\n", "")
         end,
+
+		output = {
+			write = function(text)
+				text = tostring(text)
+				-- Добавляем операцию в очередь
+				table.insert(output_queue, { type = 'write', text = text })
+				-- Планируем выполнение
+				schedule_flush()
+			end,
+
+			clear = function()
+				-- Добавляем операцию в очередь
+				table.insert(output_queue, { type = 'clear' })
+				-- Планируем выполнение
+				schedule_flush()
+			end,
+
+			append = function(text)
+				text = tostring(text)
+				-- Добавляем операцию в очередь
+				table.insert(output_queue, { type = 'append', text = text })
+				-- Планируем выполнение
+				schedule_flush()
+			end
+		},
+
         
         -- Доступ к оригинальному запросу (если нужно)
         request = result._request or {},

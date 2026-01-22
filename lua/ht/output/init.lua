@@ -92,7 +92,7 @@ function M:exec_and_show_response(parse_result)
 				self:show_error(error)
 			end
 		end)
-	end)
+	end, self.bufnr)
 
 	-- is really a job, not a dry run
 	if getmetatable(self.curl.job) then
