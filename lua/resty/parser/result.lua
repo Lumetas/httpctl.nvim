@@ -220,6 +220,15 @@ function M:write_to_buffer(bufnr)
 		end
 	end
 
+	-- if req.pre_script then
+	-- 	vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, { "" })
+	-- 	vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, { "# PRE-SCRIPT" })
+	-- 	vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, { "# @lang=lua", "> {%" })
+	-- 	vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, vim.split(req.pre_script, "\n"))
+	-- 	vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, { "%}" })
+	-- end
+
+
 	-- BODY
 	if req.body then
 		vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, { "" })

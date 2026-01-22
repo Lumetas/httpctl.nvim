@@ -430,18 +430,49 @@ function M:_parse_script()
 
 	-- resty: '--{%' and '--%}' or treesitter-http: '> {%' and  '%}'
 	if line and (string.match(line, "^--{%%%s*$") or string.match(line, "^>%s{%%%s*$")) then
-		-- ignore this line
 		self.cursor = self.cursor + 1
 		local start = self.cursor
+		local is_pre = false
+		local is_post = false
+		local post_start = start
+		local end_pre = nil
+		local pre_start = start
+
+
+		if string.match(self.lines[start], "^[%s]*%-%-pre[%s]*$") then
+			is_pre = true
+			local pre_start = start
+		else 
+			is_post = true
+		end
 
 		for i = start, self.len do
 			line = self.lines[i]
 			self.cursor = i
 
+			if string.match(line, "^[%s]*%-%-post[%s]*$") then
+				post_start = i
+				end_pre = i - 1
+				is_post = true
+			end
+
+
+
 			if string.match(line, "^--%%}%s*$") or string.match(line, "^%%}%s*$") then
 				-- ignore this line
-				self.r.meta.script = { starts = start, ends = i - 1 }
-				self.r.request.script = table.concat(self.lines, "\n", start, i - 1)
+				if is_pre then
+					if end_pre == nil then
+						end_pre = i - 1
+					end
+					self.r.meta.pre_script = { starts = pre_start, ends = end_pre }
+					self.r.request.pre_script = table.concat(self.lines, "\n", pre_start, end_pre)
+				end
+				if is_post then
+					self.r.meta.script = { starts = post_start, ends = i - 1 }
+					self.r.request.script = table.concat(self.lines, "\n", post_start, i - 1)
+				end
+				-- self.r.meta.script = { starts = start, ends = i - 1 }
+				-- self.r.request.script = table.concat(self.lines, "\n", start, i - 1)
 				self.cursor = self.cursor + 1
 				return line
 			end
