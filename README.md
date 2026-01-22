@@ -1,7 +1,7 @@
 <div align="center">
-# its my fork of [ht.nvim](https://github.com/lima1909/ht.nvim)
+# its my fork of [resty.nvim](https://github.com/lima1909/resty.nvim)
 
-# ht.nvim 
+# resty.nvim 
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/lima1909/ht.nvim/ci.yaml?style=for-the-badge)](https://github.com/lima1909/ht.nvim/actions)
 ![License](https://img.shields.io/github/license/lima1909/ht.nvim?style=for-the-badge)
