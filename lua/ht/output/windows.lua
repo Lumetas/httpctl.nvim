@@ -1,5 +1,5 @@
-local exec = require("resty.exec")
-local format = require("resty.output.format")
+local exec = require("ht.exec")
+local format = require("ht.output.format")
 
 local M = {}
 

@@ -1,10 +1,10 @@
 local curl = require("plenary.curl")
 local pjob = require("plenary.job")
-local _globals = require("resty.globals")
+local _globals = require("ht.globals")
 
 local M = {
 	is_jq_installed = true,
-	-- global_variables = require("resty.parser").get_global_variables()
+	-- global_variables = require("ht.parser").get_global_variables()
 }
 
 -- --------- JQ -------------------

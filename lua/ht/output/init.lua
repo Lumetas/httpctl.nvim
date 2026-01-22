@@ -1,14 +1,14 @@
-local winbar = require("resty.output.winbar")
-local windows = require("resty.output.windows")
-local format = require("resty.output.format")
-local statuscode = require("resty.output.statuscode")
-local exec = require("resty.exec")
-local parser = require("resty.parser")
-local util = require("resty.util")
+local winbar = require("ht.output.winbar")
+local windows = require("ht.output.windows")
+local format = require("ht.output.format")
+local statuscode = require("ht.output.statuscode")
+local exec = require("ht.exec")
+local parser = require("ht.parser")
+local util = require("ht.util")
 
 local M = {move_to_win = true, bufnr = nil, winnr = nil}
 
-local default_bufname = "resty_response"
+local default_bufname = "ht_response"
 
 
 function M._create_buf_with_win(bufname, output_window_split)
@@ -78,7 +78,7 @@ function M:exec_and_show_response(parse_result)
 	self.curl.job = exec.curl(parse_result.request, function(response)
 		self:stop_time(start_time)
 		parser.set_global_variables(response.global_variables)
-		require("resty.globals").set_global_variables(response.global_variables)
+		require("ht.globals").set_global_variables(response.global_variables)
 
 		vim.schedule(function()
 			self:show_response(response)

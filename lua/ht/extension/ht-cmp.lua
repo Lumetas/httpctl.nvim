@@ -1,6 +1,6 @@
 -- https://www.jonashietala.se/blog/2024/05/26/autocomplete_with_nvim-cmp/
-local parser = require("resty.parser")
-local items = require("resty.extension.resty-cmp-items")
+local parser = require("ht.parser")
+local items = require("ht.extension.ht-cmp-items")
 
 local M = {}
 
@@ -9,7 +9,7 @@ M.new = function()
 end
 
 function M.get_debug_name()
-	return "resty"
+	return "ht"
 end
 
 -- matches any keyword character (alphanumeric or underscore).
@@ -17,9 +17,9 @@ function M:get_keyword_pattern()
 	return [=[[a-zA-Z0-9_@]*]=]
 end
 
--- completion only for http and resty files
+-- completion only for http and ht files
 function M:is_available()
-	return (vim.bo.filetype == "resty" or vim.bo.filetype == "http") and vim.g.resty.completion
+	return (vim.bo.filetype == "ht" or vim.bo.filetype == "http") and vim.g.ht.completion
 end
 
 function M.get_varcfg_entries(lines, row, variables)

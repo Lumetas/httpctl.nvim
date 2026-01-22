@@ -1,7 +1,7 @@
 local assert = require("luassert")
-local p = require("resty.parser")
-local f = require("resty.output.format")
-local exec = require("resty.exec")
+local p = require("ht.parser")
+local f = require("ht.output.format")
+local exec = require("ht.exec")
 
 describe("examples parser:", function()
 	describe("one input", function()

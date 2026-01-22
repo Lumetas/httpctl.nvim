@@ -1,5 +1,5 @@
-local result = require("resty.parser.result")
-local util = require("resty.util")
+local result = require("ht.parser.result")
+local util = require("ht.util")
 
 local ERR = vim.diagnostic.severity.ERROR
 

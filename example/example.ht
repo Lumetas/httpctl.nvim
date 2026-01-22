@@ -5,7 +5,7 @@
 @cfg.insecure = true # configure the curl command with the option 'insecure=true'
 
 ### #give a star for this great project ;-)
-PUT https://api.github.com/user/starred/lima1909/resty.nvim
+PUT https://api.github.com/user/starred/lima1909/ht.nvim
 Authorization: Bearer {{my-token}}
 Accept: application/vnd.github+json
 

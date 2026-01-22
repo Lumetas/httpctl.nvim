@@ -1,5 +1,5 @@
 local assert = require("luassert")
-local format = require("resty.output.format")
+local format = require("ht.output.format")
 
 describe("duration:", function()
 	it("100.00 ns", function()

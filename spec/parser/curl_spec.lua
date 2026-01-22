@@ -1,5 +1,5 @@
 local assert = require("luassert")
-local c = require("resty.parser.curl")
+local c = require("ht.parser.curl")
 
 -- curl -sSL -D /run/user/1000//plenary_curl_43304f42.headers --insecure --compressed -X POST -H Content-Type: application/json ; charset=utf-8 -H Accept: application/json --data-raw { "userId": 1, "title": "my title", "body": "my body" } https://jsonplaceholder.typicode.com/posts
 

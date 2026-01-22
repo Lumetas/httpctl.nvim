@@ -1,5 +1,5 @@
 local assert = require("luassert")
-local statuscode = require("resty.output.statuscode")
+local statuscode = require("ht.output.statuscode")
 
 describe("statuscode:", function()
 	it("200", function()

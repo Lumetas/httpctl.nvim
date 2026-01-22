@@ -1,6 +1,6 @@
-local util = require("resty.util")
-local result = require("resty.parser.result")
-local curl_cmd = require("resty.parser.curl")
+local util = require("ht.util")
+local result = require("ht.parser.result")
+local curl_cmd = require("ht.parser.curl")
 
 local INF = vim.diagnostic.severity.INFO
 local WRN = vim.diagnostic.severity.WARN
@@ -239,7 +239,7 @@ local VARIABLE = VKEY .. WS .. "([=]?)" .. WS .. VALUE .. REST
 local configures = { insecure = "", raw = "", timeout = "", proxy = "", dry_run = "", check_json_body = "" }
 
 function M:_parse_variables(_, is_gloabel)
-	local _globals = require("resty.globals")
+	local _globals = require("ht.globals")
 	for lnum = self.cursor, self.len do
 		local line = self.lines[lnum]
 		local first_char = string.sub(line, 1, 1)
@@ -466,7 +466,7 @@ end
 function M:_parse_script()
 	local line, _ = self:_ignore_lines()
 
-	-- resty: '--{%' and '--%}' or treesitter-http: '> {%' and  '%}'
+	-- ht: '--{%' and '--%}' or treesitter-http: '> {%' and  '%}'
 	if line and (string.match(line, "^--{%%%s*$") or string.match(line, "^>%s{%%%s*$")) then
 		self.cursor = self.cursor + 1
 		local start = self.cursor

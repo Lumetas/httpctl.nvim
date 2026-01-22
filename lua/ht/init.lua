@@ -2,10 +2,10 @@ P = function(tab)
 	print(vim.inspect(tab))
 end
 
-local parser = require("resty.parser")
-local output = require("resty.output")
-local diagnostic = require("resty.diagnostic")
-local util = require("resty.util")
+local parser = require("ht.parser")
+local output = require("ht.output")
+local diagnostic = require("ht.diagnostic")
+local util = require("ht.util")
 
 local default_config = {
 	output = {
@@ -14,7 +14,7 @@ local default_config = {
 	},
 	response = {
 		with_folding = true,
-		bufname = "resty_response",
+		bufname = "ht_response",
 		output_window_split = "right", -- Split direction: "left", "right", "above", "below".
 	},
 	highlight = {
@@ -22,9 +22,9 @@ local default_config = {
 	},
 }
 
--- change with: ':let g:resty.diagnostics = v:false'
--- print current value: ':lua print(vim.g.resty.diagnostics)'
-vim.g.resty = { diagnostics = true, completion = true, variables_preview = true }
+-- change with: ':let g:ht.diagnostics = v:false'
+-- print current value: ':lua print(vim.g.ht.diagnostics)'
+vim.g.ht = { diagnostics = true, completion = true, variables_preview = true }
 
 local M = {
 	output = output.new(default_config),
@@ -39,7 +39,7 @@ M.setup = function(user_configs)
 	M.output = output.new(M.config)
 end
 
-_G._resty_select_window = function(win_id)
+_G._ht_select_window = function(win_id)
 	M.output:select_window(win_id)
 end
 
@@ -47,7 +47,7 @@ M.last = function()
 	if M.last_parser_result then
 		M.output:exec_and_show_response(M.last_parser_result)
 	else
-		error("No last request found. Run first [Resty run]", 0)
+		error("No last request found. Run first [HT run]", 0)
 	end
 end
 
@@ -63,7 +63,7 @@ end
 
 -- check, is telescope installed for viewing favorites
 local has_telescope = pcall(require, "telescope")
-local f = require("resty.extension.favorites")
+local f = require("ht.extension.favorites")
 
 M.favorite = function(favorite, bufnr)
 	-- bufnr = f.get_current_bufnr(bufnr)
@@ -79,7 +79,7 @@ M.favorite = function(favorite, bufnr)
 		end
 	elseif has_telescope then
 		local favorites = f.find_all_favorites(lines)
-		require("resty.extension.favorites_view").show(favorites, lines, function(row)
+		require("ht.extension.favorites_view").show(favorites, lines, function(row)
 			M._run(lines, row, bufnr)
 		end)
 	else
@@ -106,9 +106,9 @@ M.show_debug_info = function()
 end
 
 --[[
-package.loaded["resty"] = nil
-package.loaded["resty.output"] = nil
-package.loaded["resty.output.winbar"] = nil
+package.loaded["ht"] = nil
+package.loaded["ht.output"] = nil
+package.loaded["ht.output.winbar"] = nil
 ]]
 
 return M

@@ -1,5 +1,5 @@
 local assert = require("luassert")
-local f = require("resty.extension.favorites")
+local f = require("ht.extension.favorites")
 
 describe("favorite:", function()
 	local input = [[

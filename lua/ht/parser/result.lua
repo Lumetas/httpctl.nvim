@@ -1,10 +1,10 @@
-local exec = require("resty.exec")
-local _globals = require("resty.globals")
+local exec = require("ht.exec")
+local _globals = require("ht.globals")
 
 local M = { global_variables = {} }
 
 M.default_opts = {
-	replace_variables = true, -- for completion, for a better performance (resty-cmp)
+	replace_variables = true, -- for completion, for a better performance (ht-cmp)
 	is_in_execute_mode = true, -- in diagnostics are the prompt variables disabled and the parser checks, is there a request URL
 }
 

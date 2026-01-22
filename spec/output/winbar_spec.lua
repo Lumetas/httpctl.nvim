@@ -1,6 +1,6 @@
 describe("winbar:", function()
-	local output = require("resty.output")
-	local winbar = require("resty.output.winbar")
+	local output = require("ht.output")
+	local winbar = require("ht.output.winbar")
 	local assert = require("luassert")
 
 	local status = { is_ok = true, code = 200, text = "OK" }

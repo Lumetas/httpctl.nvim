@@ -57,7 +57,7 @@ M.varcfg = {
 		},
 		cmp = { kind_hl_group = "Structure", kind_text = "Curl" },
 	},
-	-- resty request configuration
+	-- ht request configuration
 	{
 		label = "check_json_body",
 		labelDetails = { detail = "boolean", description = "" },
@@ -67,7 +67,7 @@ M.varcfg = {
 			kind = "markdown",
 			value = "check the reques body if it is a valid JSON\nset value to: *true*",
 		},
-		cmp = { kind_hl_group = "Function", kind_text = "Resty" },
+		cmp = { kind_hl_group = "Function", kind_text = "HT" },
 	},
 }
 

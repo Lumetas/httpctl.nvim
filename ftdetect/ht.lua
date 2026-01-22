@@ -1,13 +1,13 @@
-vim.filetype.add({ extension = { resty = "resty" } })
+vim.filetype.add({ extension = { ht = "ht" } })
 vim.diagnostic.config({ update_in_insert = true })
 
-local parser = require("resty.parser")
-local ns_diagnostics = require("resty.diagnostic").ns_diagnostics
+local parser = require("ht.parser")
+local ns_diagnostics = require("ht.diagnostic").ns_diagnostics
 
 vim.api.nvim_create_autocmd({ "TextChangedI", "TextChanged" }, {
-	pattern = { "*.resty", "*.http" },
+	pattern = { "*.ht", "*.http" },
 	callback = function()
-		if not vim.g.resty.diagnostics then
+		if not vim.g.ht.diagnostics then
 			return
 		end
 
@@ -28,15 +28,15 @@ vim.api.nvim_create_autocmd({ "TextChangedI", "TextChanged" }, {
 vim.fn.sign_define("HintMarker", { text = "→", texthl = "WarningMsg", numhl = "WarningMsg" })
 
 local hintID = 7
-local hintNS = vim.api.nvim_create_namespace("resty_hint")
+local hintNS = vim.api.nvim_create_namespace("ht_hint")
 
 vim.api.nvim_create_autocmd("CursorMoved", {
-	pattern = { "*.resty", "*.http" },
+	pattern = { "*.ht", "*.http" },
 	callback = function()
-		local config = require("resty").config
+		local config = require("ht").config
 		vim.api.nvim_set_hl(0, "HintReplace", { fg = config.highlight.hint_replace or "LightYellow" })
 
-		if not vim.g.resty.variables_preview then
+		if not vim.g.ht.variables_preview then
 			return
 		end
 

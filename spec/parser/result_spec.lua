@@ -1,6 +1,6 @@
 local assert = require("luassert")
-local p = require("resty.parser")
-local result = require("resty.parser.result")
+local p = require("ht.parser")
+local result = require("ht.parser.result")
 
 describe("possible type for given row:", function()
 	it("empty", function()

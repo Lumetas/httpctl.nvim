@@ -1,4 +1,4 @@
-local format = require("resty.output.format")
+local format = require("ht.output.format")
 
 local M = {}
 

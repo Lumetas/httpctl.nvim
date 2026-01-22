@@ -1,9 +1,9 @@
 ---@diagnostic disable: need-check-nil
 
 local assert = require("luassert")
-local p = require("resty.parser")
-local result = require("resty.parser.result")
-local format = require("resty.output.format")
+local p = require("ht.parser")
+local result = require("ht.parser.result")
+local format = require("ht.output.format")
 
 describe("parse:", function()
 	local function parse(input, selected, opts)

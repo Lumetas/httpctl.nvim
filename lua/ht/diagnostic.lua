@@ -1,5 +1,5 @@
 local M = {
-	ns_diagnostics = vim.api.nvim_create_namespace("resty_diagnostics"),
+	ns_diagnostics = vim.api.nvim_create_namespace("ht_diagnostics"),
 }
 
 function M.reset(bufnr)

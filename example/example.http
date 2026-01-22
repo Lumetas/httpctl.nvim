@@ -2,7 +2,7 @@
 @my-token = abc-42
 
 ### #give a star for this great project ;-)
-PUT https://api.github.com/user/starred/lima1909/resty.nvim
+PUT https://api.github.com/user/starred/lima1909/ht.nvim
 Authorization: Bearer {{my-token}}
 Accept: application/vnd.github+json
 

@@ -1,8 +1,8 @@
 local assert = require("luassert")
-local cmp = require("resty.extension.resty-cmp")
-local items = require("resty.extension.resty-cmp-items")
+local cmp = require("ht.extension.ht-cmp")
+local items = require("ht.extension.ht-cmp-items")
 
-describe("resty-cmp-items:", function()
+describe("ht-cmp-items:", function()
 	it("available varcfg", function()
 		local entries = items.available_varcfg({
 			raw = "",
@@ -32,7 +32,7 @@ describe("resty-cmp-items:", function()
 	end)
 end)
 
-describe("resty-cmp:", function()
+describe("ht-cmp:", function()
 	it("add global variable host", function()
 		local entries = cmp.get_varcfg_entries({
 			"@host = http://host",

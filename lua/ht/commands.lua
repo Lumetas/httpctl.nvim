@@ -1,4 +1,4 @@
-local favorite = require("resty.extension.favorites")
+local favorite = require("ht.extension.favorites")
 
 local M = {}
 
@@ -28,9 +28,9 @@ M.complete_cmd = function(arglead)
 end
 
 M.complete = function(arglead, cmdline)
-	if cmdline == "Resty " .. M.CMD_RUN or cmdline == "Resty " .. M.CMD_LAST then
+	if cmdline == "HT " .. M.CMD_RUN or cmdline == "HT " .. M.CMD_LAST then
 		return {}
-	elseif vim.startswith(cmdline, "Resty " .. M.CMD_FAVORITE) then
+	elseif vim.startswith(cmdline, "HT " .. M.CMD_FAVORITE) then
 		local bufnr = favorite.get_current_bufnr()
 		local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
 		return favorite.find_favorite_by_prefix(lines, arglead)

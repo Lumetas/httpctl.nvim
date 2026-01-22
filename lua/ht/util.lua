@@ -48,7 +48,7 @@ end
 -- 	-- local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 --
 -- 	local lines, row = M.get_lines_and_row_from_current_buf()
--- 	local result = require("resty.parser").parse(lines, row)
+-- 	local result = require("ht.parser").parse(lines, row)
 --
 -- 	local str = vim.inspect(result)
 -- 	local result_lines = M.split_string_into_lines(str)

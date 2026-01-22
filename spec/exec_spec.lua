@@ -1,6 +1,6 @@
 local assert = require("luassert")
-local exec = require("resty.exec")
-local parser = require("resty.parser")
+local exec = require("ht.exec")
+local parser = require("ht.parser")
 
 describe("exec:", function()
 	describe("jq:", function()

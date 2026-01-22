@@ -1,5 +1,5 @@
 local assert = require("luassert")
-local p = require("resty.parser")
+local p = require("ht.parser")
 
 local function check(input, selected, expected)
 	local r = p.parse(input, selected)

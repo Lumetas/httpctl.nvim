@@ -1,17 +1,17 @@
 <div align="center">
-# its my fork of [resty.nvim](https://github.com/lima1909/resty.nvim)
+# its my fork of [ht.nvim](https://github.com/lima1909/ht.nvim)
 
-# resty.nvim 
+# ht.nvim 
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/lima1909/resty.nvim/ci.yaml?style=for-the-badge)](https://github.com/lima1909/resty.nvim/actions)
-![License](https://img.shields.io/github/license/lima1909/resty.nvim?style=for-the-badge)
-[![Stars](https://img.shields.io/github/stars/lima1909/resty.nvim?style=for-the-badge)](https://github.com/lima1909/resty.nvim/stargazers)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/lima1909/ht.nvim/ci.yaml?style=for-the-badge)](https://github.com/lima1909/ht.nvim/actions)
+![License](https://img.shields.io/github/license/lima1909/ht.nvim?style=for-the-badge)
+[![Stars](https://img.shields.io/github/stars/lima1909/ht.nvim?style=for-the-badge)](https://github.com/lima1909/ht.nvim/stargazers)
 
 A **fast** and **easy-to-use** HTTP-Rest-Client plugin for Neovim, completely written in LUA.
 
 [Features](#features) • [Install](#install) • [Syntax](#syntax) • [Examples](#examples)
 
-![image](https://github.com/lima1909/resty.nvim/blob/main/pic/resty.png)
+![image](https://github.com/lima1909/ht.nvim/blob/main/pic/ht.png)
 
 
 </div>
@@ -36,7 +36,7 @@ These are the features that contribute to this goal:
 
   ```lua
   use {
-    "lima1909/resty.nvim",
+    "lima1909/ht.nvim",
     requires = { "nvim-lua/plenary.nvim" },
   }
   ```
@@ -45,7 +45,7 @@ These are the features that contribute to this goal:
 
   ```lua
   {
-    "lima1909/resty.nvim",
+    "lima1909/ht.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
   },
   ```
@@ -68,7 +68,7 @@ These are the features that contribute to this goal:
   - `@[variable-name]=[value]` or `@[variable-name]={{variable-replacement}}`
   - `variable-replacement`: shell command, environment variable or input prompt  
     - variable-replacement are supported in: url, variable-, header- and query-values, 
-  - `configuration variables`: for curl (timeout, insecure, proxy, ...) or for resty (check_json_body)  
+  - `configuration variables`: for curl (timeout, insecure, proxy, ...) or for ht (check_json_body)  
 - request definition 
   - `method` (GET, POST, ...) (_mandatory_):
   - `url` (http://host, https://host:port, http://127.0.0.1:443?id=7) (_mandatory_):
@@ -85,7 +85,7 @@ These are the features that contribute to this goal:
 
 There are two supported filetypes:
 - `http`: needs a treesitter installation. This filetype is not 100% compatible!
-- `resty`: has his own vim syntax highlight and don't need additional installations
+- `ht`: has his own vim syntax highlight and don't need additional installations
 
 
 #### Syntax in action 
@@ -98,9 +98,9 @@ There are two supported filetypes:
 @hostname = {{>> ./myscript.sh}} # from script (start symbol: '>>'), the result will be cached
 @hostname = {{:hostname}}        # with input prompt (start symbol: ':')
 
-# prefix: @cfg. means configuration from curl and/or resty
+# prefix: @cfg. means configuration from curl and/or ht
 @cfg.timeout = 1000              # curl configuration for timeout 
-@cfg.check_json_body = true      # resty configuration to validate the json body
+@cfg.check_json_body = true      # ht configuration to validate the json body
 
 ###  #my favorite
 GET https://{{hostname}}/get?id=7
@@ -138,17 +138,17 @@ local ctx = {
 
 | User command                      | Description                                                                           |
 |-----------------------------------|---------------------------------------------------------------------------------------|
-| `:Resty run`                      | run request under the cursor OR <br>in `visual mode` run the marked request rows      |
-| `:Resty run [request definition]` | run request which is given by input, rows are seperated by `\n`<br> (you can simulate `\n` with &lt;C-v&gt;&lt;CR&gt; in `command mode`) |
-| `:Resty last`                     | run last successfully executed request                                                |
-| `:Resty favorite`                 | show a telescope view with all as favorite marked requests                            |
-| `:Resty favorite [my favorite]`   | run marked request `my favorite`, independend, where the cursor is or in which buffer |
+| `:HT run`                      | run request under the cursor OR <br>in `visual mode` run the marked request rows      |
+| `:HT run [request definition]` | run request which is given by input, rows are seperated by `\n`<br> (you can simulate `\n` with &lt;C-v&gt;&lt;CR&gt; in `command mode`) |
+| `:HT last`                     | run last successfully executed request                                                |
+| `:HT favorite`                 | show a telescope view with all as favorite marked requests                            |
+| `:HT favorite [my favorite]`   | run marked request `my favorite`, independend, where the cursor is or in which buffer |
 
 Examples for using a command with a keymap configuration:
 
 ```lua
-vim.keymap.set({"n","v"},"<leader>rr", ":Resty run<CR>",{desc="[R]esty [R]un request under the cursor"})
-vim.keymap.set({"n","v"},"<leader>rv", ":Resty favorite<CR>",{desc="[R]esty [V]iew favorites"})
+vim.keymap.set({"n","v"},"<leader>rr", ":HT run<CR>",{desc="[R]esty [R]un request under the cursor"})
+vim.keymap.set({"n","v"},"<leader>rv", ":HT favorite<CR>",{desc="[R]esty [V]iew favorites"})
 ```
 
 
@@ -181,7 +181,7 @@ __Hint:__ with `cc` can the curl call canceled.
 #### Give a star for this great project ;-)
 
 ```http
-PUT https://api.github.com/user/starred/lima1909/resty.nvim
+PUT https://api.github.com/user/starred/lima1909/ht.nvim
 Authorization: Bearer {{my-token}}
 Accept: application/vnd.github+json
 ```

@@ -1,5 +1,5 @@
 --
--- vim.api.nvim_create_namespace("Resty"),
+-- vim.api.nvim_create_namespace("HT"),
 vim.api.nvim_set_hl(0, "ActiveWin", { underdouble = true, bold = true }) -- NOTE: doesn't work with nvim 9: force = true
 vim.api.nvim_set_hl(0, "StatusOK", { fg = "grey" })
 vim.api.nvim_set_hl(0, "StatusNotOK", { fg = "red" })
@@ -11,7 +11,7 @@ local function menu_entry(entry, selected)
 		text = "%#ActiveWin#" .. text .. "%*"
 	end
 
-	return "%" .. entry.id .. "@v:lua._G._resty_select_window@" .. text .. "%X"
+	return "%" .. entry.id .. "@v:lua._G._ht_select_window@" .. text .. "%X"
 end
 
 local function winbar_str(menu_entries, selected_entry, status_def, duration_str)

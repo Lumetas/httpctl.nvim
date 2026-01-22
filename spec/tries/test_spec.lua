@@ -1,6 +1,6 @@
 local assert = require("luassert")
-local test = require("resty.tries.test")
-local util = require("resty.util")
+local test = require("ht.tries.test")
+local util = require("ht.util")
 
 describe("test-once:", function()
 	local bufnr

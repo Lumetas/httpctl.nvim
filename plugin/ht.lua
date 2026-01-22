@@ -1,30 +1,30 @@
-local resty = require("resty")
-local cmd = require("resty.commands")
--- local util = require("resty.util")
+local ht = require("ht")
+local cmd = require("ht.commands")
+-- local util = require("ht.util")
 
-vim.api.nvim_create_user_command("Resty", function(args)
+vim.api.nvim_create_user_command("HT", function(args)
 	if args and #args.fargs > 0 then
 		if args.fargs[1] == "run" then
 			local input = args.args:sub(4) -- cut the 'run' command
-			resty.run(input)
+			ht.run(input)
 			return
 		elseif args.fargs[1] == "favorite" then
 			local sel_favorite = args.args:sub(9) -- cut the command
 			sel_favorite = string.gsub(sel_favorite, "^%s+", "") -- cut the spaces
-			resty.favorite(sel_favorite)
+			ht.favorite(sel_favorite)
 			return
 		elseif args.fargs[1] == "debug" then
-			resty.show_debug_info()
+			ht.show_debug_info()
 			return
 		end
 	end
 
 	-- default call, if there are no arguments
-	resty.last()
+	ht.last()
 end, {
 	nargs = "*", -- one or none argument
 	range = true,
-	desc = "Run a Resty requests",
+	desc = "Run a HT requests",
 	complete = cmd.complete,
 })
 

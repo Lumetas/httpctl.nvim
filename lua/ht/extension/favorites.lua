@@ -1,4 +1,4 @@
-local util = require("resty.util")
+local util = require("ht.util")
 
 local M = {}
 

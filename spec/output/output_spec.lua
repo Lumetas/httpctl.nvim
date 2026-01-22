@@ -1,7 +1,7 @@
 ---@diagnostic disable: param-type-mismatch
-local output = require("resty.output")
-local result = require("resty.parser.result")
-local parser = require("resty.parser")
+local output = require("ht.output")
+local result = require("ht.parser.result")
+local parser = require("ht.parser")
 local assert = require("luassert")
 local stub = require("luassert.stub")
 
@@ -23,7 +23,7 @@ describe("output:", function()
 	it("new", function()
 		local o = output.new()
 
-		assert.are.same("resty_response", o.bufname)
+		assert.are.same("ht_response", o.bufname)
 		assert.are.same(0, o.current_menu_id)
 		assert.is_nil(o.cfg.with_folding)
 		assert.is_nil(o.bufnr)
