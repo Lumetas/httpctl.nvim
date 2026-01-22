@@ -114,7 +114,7 @@ function M:parse_definition(from, to)
 		parsers = {
 			M._parse_request,
 			M._parse_headers_queries,
-			M._parse_json_body,
+			M._parse_body,
 			M._parse_script,
 			M._parse_after_last,
 		}
@@ -374,55 +374,93 @@ end
 
 M._file_path_buffer = ""
 
-function M:_parse_json_body()
+function M:_parse_body()
 	local line, first_char = self:_ignore_lines()
 
-	if not line or (first_char ~= "{" and first_char ~= "<") then
+	if not line then
 		return line
-	-- json comes from a file
-	elseif first_char == "<" then
-		local fp = vim.trim(line:sub(2))
-		if fp == M._file_path_buffer or vim.loop.fs_stat(fp) then
-			M._file_path_buffer = fp
-			self.r.meta.body = { starts = self.cursor, ends = self.cursor, from_file = true }
-			self.r.request.body = fp
-		else
-			self.r:add_diag(ERR, "file not found: " .. fp, 0, #line, self.cursor)
-		end
-
-		self.cursor = self.cursor + 1
-		return self.lines[self.cursor]
-	-- json comes as json-string
-	else
-		local json_start = self.cursor
-		local with_break = false
-
-		for i = self.cursor + 1, self.len do
-			line = self.lines[i]
-			self.cursor = i
-
-			-- until comment line or blank line
-			if string.match(line, "^#") or string.match(line, "^%s*$") then
-				with_break = true
-				break
-			end
-		end
-
-		local json_end = self.cursor
-		if with_break then
-			-- remove comment or empty line
-			json_end = self.cursor - 1
-		else
-			self.cursor = self.cursor + 1
-		end
-
-		self.r.meta.body = { starts = json_start, ends = json_end, from_file = false }
-		self.r.request.body = table.concat(self.lines, "", json_start, json_end)
-
-		self.r:check_json_body_if_enabled(json_start, json_end)
 	end
 
-	return line
+	-- Skip headers if we encounter them
+	if string.match(line, "^[%a][%a%d%-]+:") then
+		return line
+	end
+
+	-- Check if body is from a file (starts with <)
+	if first_char == "<" and not string.match(line, "^<[%s]*%a") then
+		-- This might be XML/HTML body starting with <, not a file reference
+		-- But let's check if it's a valid file path first
+		local fp = vim.trim(line:sub(2))
+		if vim.loop.fs_stat(fp) then
+			-- It's a file
+			M._file_path_buffer = fp
+			self.r.meta.body = { starts = self.cursor, ends = self.cursor, from_file = true }
+			
+			-- Replace variables in file path if needed
+			fp = self.r:replace_variable(fp, self.cursor)
+			self.r.request.body = fp
+			self.cursor = self.cursor + 1
+			return self.lines[self.cursor]
+		end
+	end
+
+	-- Body is in the request itself (not from file)
+	local body_start = self.cursor
+	local body_end = body_start
+	local with_break = false
+
+	-- Collect all body lines until we hit a comment, blank line, or script start
+	for i = body_start, self.len do
+		line = self.lines[i]
+		self.cursor = i
+		
+		-- Check for script start
+		if string.match(line, "^--{%%%s*$") or string.match(line, "^>%s{%%%s*$") then
+			with_break = true
+			break
+		end
+		
+		-- Stop at comment line or blank line
+		if string.match(line, "^#") or string.match(line, "^%s*$") then
+			with_break = true
+			break
+		end
+		
+		body_end = i
+	end
+
+	if with_break then
+		-- Move cursor back to the line that broke the body
+		self.cursor = body_end + 1
+	else
+		self.cursor = self.cursor + 1
+	end
+
+	-- Only process body if we found some content
+	if body_start <= body_end then
+		-- Store body metadata
+		self.r.meta.body = { starts = body_start, ends = body_end, from_file = false }
+		
+		-- Combine all body lines
+		local body_lines = {}
+		for i = body_start, body_end do
+			table.insert(body_lines, self.lines[i])
+		end
+		
+		local raw_body = table.concat(body_lines, "\n")
+		
+		-- Replace variables in the body
+		local processed_body = self.r:replace_variable(raw_body, body_start)
+		self.r.request.body = processed_body
+		
+		-- Check if it's JSON for validation (if enabled)
+		local first_body_char = string.sub(self.lines[body_start], 1, 1)
+		if first_body_char == "{" or first_body_char == "[" then
+			self.r:check_json_body_if_enabled(body_start, body_end)
+		end
+	end
+
+	return self.lines[self.cursor]
 end
 
 function M:_parse_script()
@@ -544,7 +582,7 @@ M.get_replace_variable_str = function(lines, row, col)
 	local r = M.parse(lines, row, { is_in_execute_mode = false })
 	local value = r.variables[key]
 
-	-- resolve environment and exec variable
+	-- resolve environment and exec variables
 	if not value then
 		value = r:replace_variable_by_key(key)
 	end
