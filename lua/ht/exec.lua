@@ -381,6 +381,12 @@ function M.script(code, result, bufnr)
 			end
 		},
 
+		send = function(name)
+			vim.defer_fn(function()
+				vim.cmd('HT favorite ' .. name)
+			end, 200)
+		end,
+
         
         -- Доступ к оригинальному запросу (если нужно)
         request = result._request or {},
