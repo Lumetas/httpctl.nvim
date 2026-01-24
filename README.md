@@ -136,6 +136,15 @@ use {
 | `api.output.append(text)` | Добавить текст в вывод | `api.output.append("More info")` |
 | `api.send(name)` | Отправить другай запрос из избранного | `api.send("my_favorite")` |
 
+### Команды
+
+| Команда | Описание | Пример |
+|-------|----------|--------|
+| `:HT run` | Выполнить запрос | `:HT run` |
+| `:HT favorite` | Открыть меню избранных запросов | `:HT favorite` |
+| `:HT favorite <favoriteName>` | Выполнить запрос из избранного | `:HT favorite favorite` |
+| `:HT last` | Выполнить последний запрос | `:HT last` |
+
 
 ## Изюранное
 ```
