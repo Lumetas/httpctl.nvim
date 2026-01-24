@@ -16,6 +16,7 @@ local default_config = {
 		with_folding = true,
 		bufname = "ht_response",
 		output_window_split = "right", -- Split direction: "left", "right", "above", "below".
+		auto_focus_response = true,
 	},
 	highlight = {
 		hint_replace = "LightYellow",

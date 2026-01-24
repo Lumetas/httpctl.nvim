@@ -266,10 +266,6 @@ function M.run_pre_script(code, request)
                 request.body = modifications.body
             end
         end,
-        -- Выполнить команду
-        exec = function(cmd)
-            return M.cmd(cmd)
-        end
     }
     
     local env = { api = ctx }

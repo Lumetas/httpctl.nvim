@@ -1,6 +1,4 @@
-# its my fork of [resty.nvim](https://github.com/lima1909/resty.nvim)
-
-# Headers, URL and body
+## Заголовки, URL и тело запроса
 
 ```
 POST https://jsonplaceholder.org/posts
@@ -13,7 +11,16 @@ Authorization: Bearer token
 }
 ```
 
-### Variables
+## file
+```
+POST https://jsonplaceholder.org/posts
+Authorization: Bearer token
+
+<path/to/file.txt
+
+```
+
+## Variables
 
 ```
 @host = jsonplaceholder.org
@@ -28,7 +35,7 @@ Authorization: Bearer token
 }
 ```
 
-### post scripts
+## post scripts
 
 ```
 @host = jsonplaceholder.org
@@ -46,7 +53,7 @@ POST https://{{host}}/auth
 %}
 ```
 
-### pre scripts
+## pre scripts
 
 ```
 POST https://{{host}}/posts
@@ -59,9 +66,13 @@ Authorization: Bearer {{token}}
 }
 
 > {%
+    --pre
     api.set_dynamic('title', 'foo')
     api.set_dynamic('body', 'bar')
     api.set_dynamic('userId', 1)
+    
+    --post
+    -- это пост скрипт
 %}
 ```
 
@@ -77,7 +88,19 @@ use {
     'lumetas/ht.nvim',
     config = function()
         require('ht').setup(
-            auto_focus_response = false -- auto focus response window
+            output = {
+                move_to_win = true,
+                body_pretty_print = false,
+            },
+            response = {
+                with_folding = true,
+                bufname = "ht_response",
+                output_window_split = "right", -- Split direction: "left", "right", "above", "below".
+                auto_focus_response = true,
+            },
+            highlight = {
+                hint_replace = "LightYellow",
+            }
         )
     end
 }
@@ -92,10 +115,9 @@ use {
 | Метод | Описание | Пример |
 |-------|----------|--------|
 | `api.request` | Доступ к объекту запроса (только чтение) | `local url = api.request.url` |
-| `api.set_dynamic(key, value)` | Установить динамическую переменную, которая будет подставлена в запрос | `api.set_dynamic("token", "abc123")` |
+| `api.set_dynamic(key, value)` | Установить динамическую переменную, которая будет подставлена в запрос, %varName% | `api.set_dynamic("token", "abc123")` |
 | `api.get(key)` | Получить значение глобальной переменной | `local baseUrl = api.get("base_url")` |
 | `api.modify_request(modifications)` | Модифицировать параметры запроса | `api.modify_request({url = "https://api.com/v2"})` |
-| `api.exec(cmd)` | Выполнить системную команду и вернуть результат | `local date = api.exec("date")` |
 
 ### Post-request скрипты
 Используются для обработки ответа от сервера.
@@ -112,4 +134,52 @@ use {
 | `api.output.write(text)` | Записать текст в вывод (очистив предыдущий) | `api.output.write("Success!")` |
 | `api.output.clear()` | Очистить вывод | `api.output.clear()` |
 | `api.output.append(text)` | Добавить текст в вывод | `api.output.append("More info")` |
-| `api.send(name)` | Отправить запрос в избранное с указанным именем | `api.send("my_favorite")` |
+| `api.send(name)` | Отправить другай запрос из избранного | `api.send("my_favorite")` |
+
+
+## Изюранное
+```
+### #favoreiteRequest
+GET https://jsonplaceholder.org/posts
+Authorization: Bearer token
+
+{
+  "title": "foo",
+  "body": "bar",
+  "userId": 1
+}
+```
+Открыть меню избранных запросов: `:HT favorite`
+
+Выполнить запрос из меню избранных: `:HT run <favoriteName>`
+
+## Пример
+
+```
+@host = https://jsonplaceholder.org
+
+### #posts
+GET {{host}}/posts
+
+> {%
+	data = api.json_body()
+	api.set('updateId', data[1]['id'])
+	api.send('editPostTitle')
+
+%}
+
+### #editPostTitle
+PUT {{host}}/posts/{{updateId}}
+
+{
+	"title" : "%title%"
+}
+
+> {%
+	--pre
+	api.set_dynamic('title', vim.fn.input('Enter a new title: '))
+	
+	--post
+	print(api.json_body().title)
+%}
+```
